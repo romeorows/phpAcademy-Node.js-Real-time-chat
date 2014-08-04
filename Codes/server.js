@@ -28,3 +28,7 @@ mongo.connect('mongodb://127.0.0.1/chat',function(err,db) {
 	});
  });
 
+
+
+// var socket = io.connect('http://localhost:8080');
+// socket.emit('input', {"name":"Alex","message":"Hello"});
