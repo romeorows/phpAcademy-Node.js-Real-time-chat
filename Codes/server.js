@@ -12,6 +12,15 @@ mongo.connect('mongodb://127.0.0.1/chat',function(err,db) {
 			socket.emit('status', s);
 		};
 
+		//Emit all messages
+		//Force this to all client that is open
+		//every client is listening when a new message is inserted
+		//we will not retrieve all the message again, we will only get the new message
+		col.find().limit(100).sort({_id : 1}).toArray(function(err,res){
+			if (err) throw err;
+			socket.emit('output',res);
+		});
+
 		//Wait for input
 		socket.on('input', function(data){
 			var name = data.name,
@@ -23,7 +32,14 @@ mongo.connect('mongodb://127.0.0.1/chat',function(err,db) {
 				}	
 				else{
 					col.insert({name:name, message:message},function(){
-						console.log('Inserted');
+						//Emit latest message to All clients
+						client.emit('output',[data])
+
+						sendStatus({
+							message:"Message sent",
+							clear: true
+						});
+						// console.log('Inserted');
 					});
 
 				}
@@ -33,5 +49,5 @@ mongo.connect('mongodb://127.0.0.1/chat',function(err,db) {
 
 
 
-// var socket = io.connect('http://localhost:8080');
-// socket.emit('input', {"name":"Alex","message":"Hello"});
+// var socket = io.connect('http://localhost:8080'); use socket.io
+// socket.emit('input', {"name":"Alex","message":"Hello"}); insert data in db

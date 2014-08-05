@@ -1,0 +1,1 @@
+START cmd.exe /k "cd C:\Users\romeo.cadaoas\Documents\GitHub\phpAcademy-Node.js-Real-time-chat\Codes & node server.js"
